@@ -112,7 +112,7 @@ Ta sẽ tạo một ma trận JButton (kích thước m * n) để tạo giao di
 #### 2. Cập nhật giao diện
 
 Với mỗi bước di chuyển của con rắn ta chỉ cần thay đổi ở ma trận a, và cập nhật lại tất cả màu nền của ma trận button bằng hàm updateColor()
-```
+```Java
 	public void updateColor() {
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++)
@@ -120,7 +120,7 @@ Với mỗi bước di chuyển của con rắn ta chỉ cần thay đổi ở m
 	}
 ```
 Với dãy background_cl[] có giá trị là:
-```
+```Java
 	Color background_cl[] = {Color.gray, Color.LIGHT_GRAY, Color.darkGray, Color.green};
 ```
 Các màu nền lần lượt là các màu nền của ô trống, thân rắn, đầu rắn, thức ăn của rắn.
@@ -137,5 +137,137 @@ Khi con rắn:
 - Đi sang phải thì tọa độ mới của đầu rắn là (x, y + 1).
 - Đi xuống dưới thì tọa độ mới của đầu rắn là (x + 1, y).
 - Đi sang trái thì tọa độ mới của đầu rắn là (x, y - 1).
-- Ta sẽ khởi tạo 2 dãy như sau:
+Ta sẽ khởi tạo 2 dãy như sau:
+```Java
+	int convertX[] = {-1, 0, 1, 0};
+	int convertY[] = {0, 1, 0, -1};
+```
+Nếu (x, y) đang là tọa độ của rắn, và rắn di chuyển theo hướng direction thì tạo độ mới của rắn là (x + covertX[direction  - 1], y + covertY[direction  - 1])
+
+Trong trò chơi con rắn sẽ di chuyển từng nhịp theo một khoảng thời gian (có thể tùy chỉnh).
+
+Ta sử dụng class Timer cho vấn đề này.
+```Java
+	public snakeGame(String s, int k) {
+		super(s);
+		cn = init(k);
+		timer = new Timer(speed[k], new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				runSnake(direction);
+			}
+		});
+	}
+```
+Cụ thể hàm runSnake(direction) đầy đủ sẽ như sau:
+```Java
+	public void runSnake(int k) {
+		a[xSnake[sizeSnake - 1]][ySnake[sizeSnake - 1]] = 1;
+		xSnake[sizeSnake] = xSnake[sizeSnake - 1] + convertX[k - 1];
+		ySnake[sizeSnake] = ySnake[sizeSnake - 1] + convertY[k - 1];
+		
+		if (xSnake[sizeSnake] < 0)
+			xSnake[sizeSnake] = m - 1;
+		if (xSnake[sizeSnake] == m)
+			xSnake[sizeSnake] = 0;
+		if (ySnake[sizeSnake] < 0)
+			ySnake[sizeSnake] = n - 1;
+		if (ySnake[sizeSnake] == n)
+			ySnake[sizeSnake] = 0;
+		
+		if (a[xSnake[sizeSnake]][ySnake[sizeSnake]] == 1) {
+			timer.stop();
+			JOptionPane.showMessageDialog(null, "Bạn đã bị thua");
+			loss = true;
+			return;
+		}
+		a[xSnake[start]][ySnake[start]] = 0;
+		if (xFood == xSnake[sizeSnake] && yFood == ySnake[sizeSnake]) {
+			a[xSnake[start]][ySnake[start]] = 1;
+			start--;
+			creatFood();
+			score_bt.setText(String.valueOf(Integer.parseInt(score_bt.getText()) + 1));
+		}
+		a[xSnake[sizeSnake]][ySnake[sizeSnake]] = 2;
+		start++;
+		sizeSnake++;
+		updateColor();
+		for (int i = start; i < sizeSnake; i++) {
+			xSnake[i - start] = xSnake[i];
+			ySnake[i - start] = ySnake[i];
+		}
+		sizeSnake -= start;
+		start = 0;
+	}
+```
+Trong hàm trên ta thấy có đoạn code là:
+```Java
+		if (xSnake[sizeSnake] < 0)
+			xSnake[sizeSnake] = m - 1;
+		if (xSnake[sizeSnake] == m)
+			xSnake[sizeSnake] = 0;
+		if (ySnake[sizeSnake] < 0)
+			ySnake[sizeSnake] = n - 1;
+		if (ySnake[sizeSnake] == n)
+			ySnake[sizeSnake] = 0;
+```
+Đoạn này có mục đích là cho rắn có thể chạy "xuyên không" như hình bên dưới.
+
+#### 2. Rắn ăn thức ăn
+
+Viết hàm creatFood() dùng để tạo ra một thức ăn ngẫu nhiên.
+```Java
+	public void creatFood() {
+		int k = 0;
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < n; j++)
+				if (a[i][j] == 0)
+					k++;
+		int h = (int) ((k - 1) *  Math.random() + 1);
+		k = 0;
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < n; j++)
+				if (a[i][j] == 0) {
+					k++;
+					if (k == h) {
+						xFood = i;
+						yFood = j;
+						a[i][j] = 3;
+						return;
+					}
+				}
+	}
+```
+Khi rắn ăn trúng con mồi ta sẽ tạo một thức ăn khác.
+
+Chú ý: khi rắn ăn trúng thức ăn thì đuôi của rắn sẽ không bị đứt.
+```Java
+		a[xSnake[start]][ySnake[start]] = 0; // cắt đuôi rắn khi rắn di chuyển
+		if (xFood == xSnake[sizeSnake] && yFood == ySnake[sizeSnake]) {
+			a[xSnake[start]][ySnake[start]] = 1; // nếu rắn ăn trúng thức ăn, nối lại đuổi rắn
+			start--;
+			creatFood();
+			score_bt.setText(String.valueOf(Integer.parseInt(score_bt.getText()) + 1));
+		}
+```
+
+#### 3. Rắn cắn trúng thân rắn.
+
+Trong lúc di chuyển, nếu đầu rắn trùng tọa độ với thân rắn thì có nghĩa là rắn đã căn trúng thân và bạn đã bị thua, trò chơi kết thúc.
+```Java
+		if (a[xSnake[sizeSnake]][ySnake[sizeSnake]] == 1) {
+			timer.stop();
+			JOptionPane.showMessageDialog(null, "Bạn đã bị thua");
+			loss = true;
+			return;
+		}
+```
+Kết
+Trên đây là cách mình đã tạo ra trò chơi rắn săn mồi quen thuộc, do là bài làm cá nhân nên chưa thể tránh hết mọi sai sót, rất mong nhận được góp ý của các bạn ở dưới phần bình luận.
+
+Các bạn có thể tham khảo source code của mình [Tại đây](https://github.com/zukahai/SnakeGame-javaSwing).
+
+Video demo:
+
+[<p align="center"> <img src="https://github.com/zukahai/HaiZuka/blob/master/Images/SnakeGame/2.png" alt="Snake" /> </p>](https://codelearn.io/Media/Default/Users/HaiZuka/HaiZuka/My%20Video.mp4)
+
 ## <p align="center">  :tv: Thanks for whatching :earth_africa: </p>
