@@ -268,6 +268,6 @@ Các bạn có thể tham khảo source code của mình [Tại đây](https://g
 
 Video demo:
 
-[<p align="center"> <img src="https://github.com/zukahai/HaiZuka/blob/master/Images/SnakeGame/2.png" alt="Snake" /> </p>](https://codelearn.io/Media/Default/Users/HaiZuka/HaiZuka/My%20Video.mp4)
+[<p align="center"> <img src="https://github.com/zukahai/HaiZuka/blob/master/Images/SnakeGame/3.png" alt="Snake" /> </p>](https://codelearn.io/Media/Default/Users/HaiZuka/HaiZuka/My%20Video.mp4)
 
 ## <p align="center">  :tv: Thanks for whatching :earth_africa: </p>
