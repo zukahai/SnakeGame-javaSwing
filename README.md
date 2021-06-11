@@ -109,5 +109,33 @@ Ta sẽ tạo một ma trận JButton (kích thước m * n) để tạo giao di
 	}
 ```
 
+#### 2. Cập nhật giao diện
 
+Với mỗi bước di chuyển của con rắn ta chỉ cần thay đổi ở ma trận a, và cập nhật lại tất cả màu nền của ma trận button bằng hàm updateColor()
+```
+	public void updateColor() {
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < n; j++)
+				bt[i][j].setBackground(background_cl[a[i][j]]);
+	}
+```
+Với dãy background_cl[] có giá trị là:
+```
+	Color background_cl[] = {Color.gray, Color.LIGHT_GRAY, Color.darkGray, Color.green};
+```
+Các màu nền lần lượt là các màu nền của ô trống, thân rắn, đầu rắn, thức ăn của rắn.
+
+### Các hàm xử lý
+
+#### 1. Di chuyển con rắn
+
+Ta thấy rằng khi con rắn di chuyển thì đầu rắn (xác định bới cặp tạo độ (x, y))sẽ di chuyển sang một tọa độ mới, và đuôi rắn sẽ bị đứt (điểm cuối cùng của con rắn sẽ mất đi)
+
+Khi con rắn:
+
+- Đi lên trên thì tọa độ mới của đầu rắn là (x - 1, y).
+- Đi sang phải thì tọa độ mới của đầu rắn là (x, y + 1).
+- Đi xuống dưới thì tọa độ mới của đầu rắn là (x + 1, y).
+- Đi sang trái thì tọa độ mới của đầu rắn là (x, y - 1).
+- Ta sẽ khởi tạo 2 dãy như sau:
 ## <p align="center">  :tv: Thanks for whatching :earth_africa: </p>
