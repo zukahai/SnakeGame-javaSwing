@@ -1,4 +1,4 @@
-package snakeGame;
+package GUI;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.io.*;
 
 
-public class snakeGame extends JFrame implements ActionListener, KeyListener {
+public class SnakeGame extends JFrame implements ActionListener, KeyListener {
 	boolean loss = false;
 	int maxXY = 100;
 	int m = 20, n = 35;
@@ -26,13 +26,13 @@ public class snakeGame extends JFrame implements ActionListener, KeyListener {
 	private int xFood, yFood;
 	private int sizeSnake = 0;
 	private int direction = 2;
-	private JButton newGame_bt, score_bt, high_bt;
+	private JButton newGame_bt, score_bt;
 	private int stepScore = 1;
 	private JPanel pn, pn2;
 	Container cn;
 	Timer timer;
-	public snakeGame(String s, int k) {
-		super(s);
+	public SnakeGame(int k) {
+		super("SnakeGame - HaiZuka");
 		stepScore = (k + 1) * (k + 1);
 		cn = init(k);
 		timer = new Timer(speed[k], new ActionListener() {
@@ -71,12 +71,6 @@ public class snakeGame extends JFrame implements ActionListener, KeyListener {
 		score_bt.setFont(new Font("UTM Micra", 1, 15));
 		score_bt.setBackground(Color.white);
 		
-		high_bt = new JButton("High Score");
-		high_bt.addActionListener(this);
-		high_bt.addKeyListener(this);
-		high_bt.setFont(new Font("UTM Micra", 1, 15));
-		high_bt.setBackground(Color.white);
-		
 		for (int i = 1; i <= speed.length; i++)
 			lv.addItem("Mức độ " + i);
 		lv.setSelectedIndex(k);
@@ -87,7 +81,6 @@ public class snakeGame extends JFrame implements ActionListener, KeyListener {
 		pn2.add(newGame_bt);
 		pn2.add(lv);
 		pn2.add(score_bt);
-		pn2.add(high_bt);
 		
 		a[m / 2][n / 2 - 1] = 1;
 		a[m / 2][n / 2] = 1;
@@ -237,15 +230,12 @@ public class snakeGame extends JFrame implements ActionListener, KeyListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand() == newGame_bt.getText()) {
-			new snakeGame("CodeLearn.io - Game Rắn Săn Mồi", lv.getSelectedIndex());
+			new SnakeGame(lv.getSelectedIndex());
 			this.dispose();
-		}
-		if (e.getActionCommand() == high_bt.getText()) {
-			new HighScore();
 		}
 		
 	}
 	public static void main(String[] args) {
-		snakeGame sn = new snakeGame("CodeLearn.io - Game Rắn Săn Mồi", 4);
+		SnakeGame sn = new SnakeGame(4);
 	}
 }
