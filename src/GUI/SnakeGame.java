@@ -130,32 +130,6 @@ public class SnakeGame extends JFrame implements ActionListener, KeyListener {
 		
 		if (a[xSnake[sizeSnake]][ySnake[sizeSnake]] == 1) {
 			timer.stop();
-			String str = JOptionPane.showInputDialog("Điểm của bạn là: " + score_bt.getText() + "\n" + "Nhập tên (và trường) của bạn để lưu lại số điểm này nhé\n" +
-			"(Tiếng Việt không dấu)");
-			String sdt = "";
-			String checkSdt = "^0[0-9]{9}";
-			do {
-				sdt = JOptionPane.showInputDialog("Nhập số điện thoại của bạn:\n(Dùng để trao quà)");
-				if (!sdt.matches(checkSdt))
-					JOptionPane.showMessageDialog(null, "Số điện thoại không đúng\n" + "Vui lòng nhập lại");
-			} while(!sdt.matches(checkSdt));
-			JOptionPane.showMessageDialog(null, "Đã lưu điểm");
-			str = str.replace(" ", "%20");
-//			System.out.println("http://localhost/vku/HighScore/snakeGame?vkuName=" + str + "&score=" + score_bt.getText());
-			try {
-				URL url = new URL("https://haizukon.000webhostapp.com/HighScore/SnakeGame?vkuName=" + str + "&score=" + score_bt.getText() + "&sdt=" + sdt);
-				URLConnection urlConnection = url.openConnection();
-				HttpURLConnection connection = null;
-				if(urlConnection instanceof HttpURLConnection) {
-					connection = (HttpURLConnection) urlConnection;
-				}
-				BufferedReader in = new BufferedReader(
-				new InputStreamReader(connection.getInputStream()));
-//				System.out.println(url);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			loss = true;
 			return;
 		}
